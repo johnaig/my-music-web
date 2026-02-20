@@ -3,134 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Professional Music Hub</title>
+    <title>OFFICIAL MUSIC | JohnJust Chanel</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
-        /* Custom Styles for Dark Mode & Animations */
-        body {
-            font-family: 'Inter', sans-serif; /* แนะนำใช้ฟอนต์ทันสมัย */
+        body { 
+            background-color: #030303; 
+            color: #ffffff; 
+            font-family: 'Kanit', sans-serif;
+            background-image: radial-gradient(circle at 50% -20%, #1a1a1a 0%, #030303 80%);
         }
-        .bg-gradient-dark {
-            background: linear-gradient(to bottom, #0a0a0a, #1a1a1a); /* ไล่เฉดสีดำ */
+        .hero-text { font-family: 'Inter', sans-serif; text-transform: uppercase; }
+        .video-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .card-glow:hover {
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); /* เรืองแสงสีแดงเมื่อเมาส์ชี้ */
+        .video-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(220, 38, 38, 0.5);
+            transform: translateY(-10px) scale(1.02);
         }
-        .play-button {
+        .play-icon {
+            opacity: 0;
+            transform: scale(0.5);
             transition: all 0.3s ease;
-            background-color: rgba(239, 68, 68, 0.9); /* สีแดงอมดำ */
-            border: 2px solid #ef4444;
         }
-        .play-button:hover {
-            background-color: #ef4444; /* สีแดงสดขึ้น */
-            transform: scale(1.1);
+        .video-card:hover .play-icon {
+            opacity: 1;
+            transform: scale(1);
         }
-        .modal-bg {
-            background-color: rgba(0, 0, 0, 0.95); /* พื้นหลัง Modal ดำสนิท */
-            backdrop-filter: blur(5px); /* เบลอพื้นหลังเล็กน้อย */
-        }
-        .close-button {
-            color: #ef4444;
-            font-size: 1.5rem;
-            text-shadow: 0 0 5px rgba(239, 68, 68, 0.7);
-        }
-        .close-button:hover {
-            color: white;
-            transform: scale(1.1);
+        .red-glow {
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.2);
         }
     </style>
 </head>
-<body class="bg-gradient-dark text-gray-100 min-h-screen">
+<body class="min-h-screen">
 
-    <header class="py-12 text-center relative overflow-hidden">
-        <h1 class="text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-500 animate-pulse-light">
-            [JohnJust Chanel]
-        </h1>
-        <p class="text-xl text-gray-400 mt-4 animate-fade-in">
-           อัปเดตเพลงใหม่ล่าสุดจาก YouTube ของฉันโดยอัตโนมัติ
-        </p>
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div class="w-80 h-80 rounded-full bg-red-700 opacity-10 blur-3xl animate-blob" style="animation-delay: 2s;"></div>
-            <div class="w-60 h-60 rounded-full bg-pink-500 opacity-10 blur-3xl animate-blob" style="animation-delay: 4s;"></div>
+    <header class="pt-20 pb-16 px-6 text-center">
+        <div class="inline-block px-4 py-1 border border-red-600/30 rounded-full text-red-500 text-xs font-bold tracking-widest mb-4 uppercase animate-pulse">
+            New Update
         </div>
+        <h1 class="hero-text text-6xl md:text-8xl font-black italic tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500 mb-4">
+            OFFICIAL MUSIC
+        </h1>
+        <p class="text-gray-400 text-lg md:text-xl font-light max-w-2xl mx-auto">
+            อัปเดตเพลงใหม่ล่าสุดจาก YouTube ของ <span class="text-white font-bold border-b-2 border-red-600">JohnJust Chanel</span>
+        </p>
     </header>
 
-    <div class="container mx-auto px-6 pb-20">
-        <div id="video-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <p class="col-span-full text-center text-gray-500 text-lg">Loading your tracks...</p>
-        </div>
-    </div>
-
-    <div id="video-modal" class="fixed inset-0 modal-bg z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
-        <div class="relative w-full max-w-5xl bg-gray-900 rounded-lg shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
-            <button onclick="closeVideo()" class="absolute -top-12 md:-top-16 right-0 md:-right-8 p-2 rounded-full transition-all close-button">
-                &times; ปิด
-            </button>
-            <div class="aspect-video">
-                <iframe id="main-player" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <main class="container mx-auto px-6 pb-32">
+        <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div class="col-span-full text-center py-20">
+                <div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-gray-500 tracking-widest uppercase">Loading Music...</p>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="border-t border-white/5 py-10 text-center text-gray-600 text-sm">
+        <p>&copy; 2026 JohnJust Chanel. All Rights Reserved.</p>
+    </footer>
 
     <script>
-        const API_KEY = 'AIzaSyCatLUYqoDhn0LPRFFHJ27AQsvZk6MoeZ8'; // อย่าลืมเปลี่ยน!
-        const CHANNEL_ID = 'UCVQf3nHZNjMrD3XfBd6y_tg'; // อย่าลืมเปลี่ยน!
+        const API_KEY = 'AIzaSyCatLUYqoDhn0LPRFFHJ27AQsvZk6MoeZ8'; 
+        const CHANNEL_ID = 'UCVQf3nHZNjMrD3XfBd6y_tg'; 
 
-        async function fetchMusic() {
-            // เพิ่ม q=-#shorts และ videoDuration=medium เพื่อกรอง Shorts และคลิปสั้นมากๆ ออก
-            const url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=12&type=video&q=-#shorts&videoDuration=medium`;
-
+        async function fetchVideos() {
             try {
-                const response = await fetch(url);
-                const data = await response.json();
-                // Filter out any remaining shorts by checking title or description if needed,
-                // but 'q=-#shorts' and 'videoDuration=medium' should be quite effective.
-                renderVideos(data.items);
+                // 1. ดึงข้อมูลเบื้องต้น 50 รายการ
+                const searchUrl = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=50&type=video`;
+                const searchRes = await fetch(searchUrl);
+                const searchData = await searchRes.json();
+                
+                if (searchData.error) throw new Error(searchData.error.message);
+
+                // 2. ดึงรายละเอียดเวลา (Duration) เพื่อกรอง Shorts
+                const videoIds = searchData.items.map(v => v.id.videoId).join(',');
+                const detailRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${API_KEY}&id=${videoIds}&part=contentDetails`);
+                const detailData = await detailRes.json();
+
+                const grid = document.getElementById('video-grid');
+                grid.innerHTML = '';
+
+                searchData.items.forEach((item, index) => {
+                    const duration = detailData.items[index].contentDetails.duration;
+                    const title = item.snippet.title;
+
+                    // กรองคลิปที่สั้นกว่า 60 วินาที หรือมีคำว่า shorts ในชื่อ
+                    if (isNotShort(duration) && !title.toLowerCase().includes('#shorts')) {
+                        grid.innerHTML += `
+                            <a href="https://www.youtube.com/watch?v=${item.id.videoId}" target="_blank" class="video-card group rounded-2xl overflow-hidden shadow-2xl">
+                                <div class="relative aspect-video overflow-hidden">
+                                    <img src="${item.snippet.thumbnails.high.url}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110">
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                        <div class="play-icon w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.5)]">
+                                            <svg class="w-8 h-8 fill-white ml-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="font-bold text-xl mb-3 line-clamp-2 leading-tight group-hover:text-red-500 transition-colors">${title}</h3>
+                                    <div class="flex items-center text-xs text-gray-500 space-x-4">
+                                        <span class="flex items-center">
+                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"></path></svg>
+                                            ${new Date(item.snippet.publishedAt).toLocaleDateString('th-TH')}
+                                        </span>
+                                        <span class="px-2 py-0.5 border border-gray-700 rounded text-[10px] uppercase tracking-tighter">Official</span>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                    }
+                });
             } catch (err) {
-                console.error("Failed to fetch YouTube data:", err);
-                document.getElementById('video-container').innerHTML = '<p class="col-span-full text-center text-red-500 text-lg">Error loading music. Please check API Key or try again later.</p>';
+                document.getElementById('video-grid').innerHTML = `<p class="col-span-full text-center text-red-500">Error: ${err.message}</p>`;
             }
         }
 
-        function renderVideos(videos) {
-            const container = document.getElementById('video-container');
-            container.innerHTML = videos.map(video => `
-                <div class="group cursor-pointer relative bg-gray-900 rounded-xl overflow-hidden shadow-lg card-glow transition-all duration-300" onclick="playVideo('${video.id.videoId}')">
-                    <img src="${video.snippet.thumbnails.high.url}" alt="${video.snippet.title}" class="w-full object-cover transition-transform duration-300 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="play-button px-6 py-3 rounded-full text-white text-lg font-bold">▶ Play</span>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="font-bold text-xl leading-tight line-clamp-2 text-gray-50 group-hover:text-red-400 transition-colors duration-300">${video.snippet.title}</h3>
-                        <p class="text-gray-400 text-sm mt-2">${new Date(video.snippet.publishedAt).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                    </div>
-                </div>
-            `).join('');
+        function isNotShort(duration) {
+            const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+            const m = parseInt(match[2]) || 0;
+            const s = parseInt(match[3]) || 0;
+            return (m * 60 + s) >= 60;
         }
 
-        function playVideo(id) {
-            const modal = document.getElementById('video-modal');
-            const player = document.getElementById('main-player');
-            player.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`; // rel=0 ป้องกันวิดีโอแนะนำที่ไม่เกี่ยวข้อง
-            modal.style.display = 'flex';
-            setTimeout(() => { // เพิ่ม delay เพื่อให้ animation ทำงาน
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                modal.querySelector('div.relative').classList.remove('scale-95');
-            }, 50);
-        }
-
-        function closeVideo() {
-            const modal = document.getElementById('video-modal');
-            const player = document.getElementById('main-player');
-            player.src = ""; // หยุดเล่นวิดีโอ
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            modal.querySelector('div.relative').classList.add('scale-95');
-            setTimeout(() => { // รอ animation ปิดเสร็จก่อนซ่อน
-                modal.style.display = 'none';
-            }, 300);
-        }
-
-        fetchMusic();
+        fetchVideos();
     </script>
 </body>
 </html>
