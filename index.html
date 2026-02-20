@@ -3,67 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Music Channel</title>
+    <title>My Professional Music Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Styles for Dark Mode & Animations */
+        body {
+            font-family: 'Inter', sans-serif; /* แนะนำใช้ฟอนต์ทันสมัย */
+        }
+        .bg-gradient-dark {
+            background: linear-gradient(to bottom, #0a0a0a, #1a1a1a); /* ไล่เฉดสีดำ */
+        }
+        .card-glow:hover {
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); /* เรืองแสงสีแดงเมื่อเมาส์ชี้ */
+        }
+        .play-button {
+            transition: all 0.3s ease;
+            background-color: rgba(239, 68, 68, 0.9); /* สีแดงอมดำ */
+            border: 2px solid #ef4444;
+        }
+        .play-button:hover {
+            background-color: #ef4444; /* สีแดงสดขึ้น */
+            transform: scale(1.1);
+        }
+        .modal-bg {
+            background-color: rgba(0, 0, 0, 0.95); /* พื้นหลัง Modal ดำสนิท */
+            backdrop-filter: blur(5px); /* เบลอพื้นหลังเล็กน้อย */
+        }
+        .close-button {
+            color: #ef4444;
+            font-size: 1.5rem;
+            text-shadow: 0 0 5px rgba(239, 68, 68, 0.7);
+        }
+        .close-button:hover {
+            color: white;
+            transform: scale(1.1);
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white font-sans">
+<body class="bg-gradient-dark text-gray-100 min-h-screen">
 
-    <header class="py-10 text-center">
-        <h1 class="text-4xl font-bold text-red-500">MY NEW RELEASES</h1>
-        <p class="text-gray-400 mt-2">อัปเดตเพลงใหม่ล่าสุดจาก YouTube ของฉันโดยอัตโนมัติ</p>
+    <header class="py-12 text-center relative overflow-hidden">
+        <h1 class="text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-500 animate-pulse-light">
+            [JohnJust Chanel]
+        </h1>
+        <p class="text-xl text-gray-400 mt-4 animate-fade-in">
+           อัปเดตเพลงใหม่ล่าสุดจาก YouTube ของฉันโดยอัตโนมัติ
+        </p>
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-80 h-80 rounded-full bg-red-700 opacity-10 blur-3xl animate-blob" style="animation-delay: 2s;"></div>
+            <div class="w-60 h-60 rounded-full bg-pink-500 opacity-10 blur-3xl animate-blob" style="animation-delay: 4s;"></div>
+        </div>
     </header>
 
-    <div class="container mx-auto px-4">
-        <div id="video-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <p class="text-center col-span-full">กำลังโหลดเพลงโปรดของคุณ...</p>
+    <div class="container mx-auto px-6 pb-20">
+        <div id="video-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <p class="col-span-full text-center text-gray-500 text-lg">Loading your tracks...</p>
+        </div>
+    </div>
+
+    <div id="video-modal" class="fixed inset-0 modal-bg z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="relative w-full max-w-5xl bg-gray-900 rounded-lg shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
+            <button onclick="closeVideo()" class="absolute -top-12 md:-top-16 right-0 md:-right-8 p-2 rounded-full transition-all close-button">
+                &times; ปิด
+            </button>
+            <div class="aspect-video">
+                <iframe id="main-player" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
 
     <script>
-        // 1. ใส่ข้อมูลของคุณตรงนี้
-        const API_KEY = 'AIzaSyCatLUYqoDhn0LPRFFHJ27AQsvZk6MoeZ8'; // ไปเอาที่ Google Cloud Console
-        const CHANNEL_ID = 'UCVQf3nHZNjMrD3XfBd6y_tg'; // รหัสช่องของคุณ
-        const MAX_RESULTS = 20; // จำนวนเพลงที่จะโชว์
+        const API_KEY = 'AIzaSyCatLUYqoDhn0LPRFFHJ27AQsvZk6MoeZ8'; // อย่าลืมเปลี่ยน!
+        const CHANNEL_ID = 'UCVQf3nHZNjMrD3XfBd6y_tg'; // อย่าลืมเปลี่ยน!
 
-        async function fetchMyMusic() {
-            const url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=${MAX_RESULTS}&type=video`;
+        async function fetchMusic() {
+            // เพิ่ม q=-#shorts และ videoDuration=medium เพื่อกรอง Shorts และคลิปสั้นมากๆ ออก
+            const url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=12&type=video&q=-#shorts&videoDuration=medium`;
 
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                displayVideos(data.items);
-            } catch (error) {
-                console.error('เกิดข้อผิดพลาด:', error);
-                document.getElementById('video-container').innerHTML = '<p class="text-center col-span-full text-red-400">โหลดข้อมูลไม่สำเร็จ กรุณาตรวจสอบ API Key</p>';
+                // Filter out any remaining shorts by checking title or description if needed,
+                // but 'q=-#shorts' and 'videoDuration=medium' should be quite effective.
+                renderVideos(data.items);
+            } catch (err) {
+                console.error("Failed to fetch YouTube data:", err);
+                document.getElementById('video-container').innerHTML = '<p class="col-span-full text-center text-red-500 text-lg">Error loading music. Please check API Key or try again later.</p>';
             }
         }
 
-        function displayVideos(videos) {
+        function renderVideos(videos) {
             const container = document.getElementById('video-container');
-            container.innerHTML = ''; // ล้างข้อความ Loading
-
-            videos.forEach(video => {
-                const title = video.snippet.title;
-                const thumb = video.snippet.thumbnails.high.url;
-                const videoId = video.id.videoId;
-
-                const card = `
-                    <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition transform hover:scale-105">
-                        <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank">
-                            <img src="${thumb}" alt="${title}" class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <h3 class="text-lg font-semibold truncate">${title}</h3>
-                                <p class="text-gray-400 text-sm mt-2">คลิกเพื่อฟังเพลง</p>
-                            </div>
-                        </a>
+            container.innerHTML = videos.map(video => `
+                <div class="group cursor-pointer relative bg-gray-900 rounded-xl overflow-hidden shadow-lg card-glow transition-all duration-300" onclick="playVideo('${video.id.videoId}')">
+                    <img src="${video.snippet.thumbnails.high.url}" alt="${video.snippet.title}" class="w-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span class="play-button px-6 py-3 rounded-full text-white text-lg font-bold">▶ Play</span>
                     </div>
-                `;
-                container.innerHTML += card;
-            });
+                    <div class="p-5">
+                        <h3 class="font-bold text-xl leading-tight line-clamp-2 text-gray-50 group-hover:text-red-400 transition-colors duration-300">${video.snippet.title}</h3>
+                        <p class="text-gray-400 text-sm mt-2">${new Date(video.snippet.publishedAt).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // เรียกใช้งานฟังก์ชัน
-        fetchMyMusic();
+        function playVideo(id) {
+            const modal = document.getElementById('video-modal');
+            const player = document.getElementById('main-player');
+            player.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`; // rel=0 ป้องกันวิดีโอแนะนำที่ไม่เกี่ยวข้อง
+            modal.style.display = 'flex';
+            setTimeout(() => { // เพิ่ม delay เพื่อให้ animation ทำงาน
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.querySelector('div.relative').classList.remove('scale-95');
+            }, 50);
+        }
+
+        function closeVideo() {
+            const modal = document.getElementById('video-modal');
+            const player = document.getElementById('main-player');
+            player.src = ""; // หยุดเล่นวิดีโอ
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div.relative').classList.add('scale-95');
+            setTimeout(() => { // รอ animation ปิดเสร็จก่อนซ่อน
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        fetchMusic();
     </script>
 </body>
 </html>
