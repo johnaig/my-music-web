@@ -5,117 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OFFICIAL MUSIC | JohnJust Chanel</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&family=Prompt:wght@800;900&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background-color: #f8f9fa; 
-            color: #1a1a1a; 
-            font-family: 'Kanit', sans-serif;
-            background-image: radial-gradient(circle at 50% 0%, #ffffff 0%, #f1f3f5 100%);
-        }
-        .hero-text { font-family: 'Inter', sans-serif; text-transform: uppercase; }
-        .video-card {
+        body { background-color: #fbfbfc; color: #2d3436; font-family: 'Kanit', sans-serif; overflow-x: hidden; }
+        .brand-title { font-family: 'Prompt', sans-serif; letter-spacing: -1px; }
+        .organic-card {
             background: #ffffff;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-radius: 40px 12px 40px 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            border: 1px solid rgba(220, 38, 38, 0.05);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .video-card:hover {
+        .organic-card:hover {
+            border-radius: 12px 40px 12px 40px;
             transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border-color: #ef4444;
+            box-shadow: 0 20px 40px rgba(220, 38, 38, 0.12);
+            border-color: rgba(220, 38, 38, 0.3);
         }
-        .play-icon {
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.3s ease;
-        }
-        .video-card:hover .play-icon {
-            opacity: 1;
-            transform: scale(1);
-        }
+        .organic-img { border-radius: 30px 8px 30px 8px; transition: all 0.5s ease; }
+        .organic-card:hover .organic-img { border-radius: 8px 30px 8px 30px; }
+        .blob { position: absolute; z-index: -1; filter: blur(60px); }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen relative">
+    <div class="blob top-0 left-0 w-[50vw] h-[50vw] bg-red-100/50"></div>
 
-    <header class="pt-24 pb-16 px-6 text-center">
-        <div class="inline-block px-4 py-1 bg-red-50 text-red-600 text-xs font-bold tracking-widest mb-4 uppercase rounded-full border border-red-100">
-            Music Collection
-        </div>
-        <h1 class="hero-text text-6xl md:text-8xl font-black italic tracking-tighter text-gray-900 mb-4">
-            OFFICIAL MUSIC
-        </h1>
-        <p class="text-gray-500 text-lg md:text-xl font-light max-w-2xl mx-auto">
-            อัปเดตเพลงใหม่ล่าสุดจาก YouTube ของ <span class="text-red-600 font-bold">JohnJust Chanel</span>
-        </p>
+    <header class="pt-24 pb-16 px-6 text-center relative z-10">
+        <div class="inline-block px-5 py-1.5 bg-white shadow-sm border border-red-100 text-red-600 text-xs font-bold tracking-[0.2em] mb-6 rounded-full uppercase">Music Collection</div>
+        <h1 class="brand-title text-5xl md:text-8xl text-gray-900 mb-2">OFFICIAL <span class="text-red-600 italic">MUSIC</span></h1>
+        <p class="text-gray-500 text-lg md:text-xl font-light mt-4">อัปเดตเพลงจาก <span class="font-bold text-gray-800 border-b-2 border-red-500">JohnJust Chanel</span></p>
     </header>
 
-    <main class="container mx-auto px-6 pb-32">
-        <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            <div class="col-span-full text-center py-20">
+    <main class="container mx-auto px-6 pb-32 relative z-10">
+        <div id="error-message" class="hidden max-w-3xl mx-auto mb-10 bg-red-50 border-l-4 border-red-600 p-6 rounded-r-2xl shadow-sm"></div>
+
+        <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div class="col-span-full text-center py-20" id="loading-state">
                 <div class="w-12 h-12 border-4 border-gray-200 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
-                <p class="text-gray-400 font-medium tracking-widest uppercase">Fetching Tracks...</p>
+                <p class="text-gray-400 font-medium tracking-widest uppercase text-sm">กำลังดึงข้อมูลและยอดการเข้าชม...</p>
             </div>
         </div>
     </main>
-
-    <footer class="border-t border-gray-200 bg-white py-12 text-center text-gray-400 text-sm mt-auto">
-        <p>&copy; 2026 JohnJust Chanel. All Rights Reserved.</p>
-    </footer>
 
     <script>
         const API_KEY = 'AIzaSyCatLUYqoDhn0LPRFFHJ27AQsvZk6MoeZ8'; 
         const CHANNEL_ID = 'UCVQf3nHZNjMrD3XfBd6y_tg'; 
 
         async function fetchVideos() {
+            const vGrid = document.getElementById('video-grid');
+            const errorBox = document.getElementById('error-message');
+            const loading = document.getElementById('loading-state');
+
             try {
-                const searchUrl = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=50&type=video`;
-                const searchRes = await fetch(searchUrl);
+                // 1. ดึงรายการวิดีโอ
+                const searchRes = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=50&type=video`);
                 const searchData = await searchRes.json();
-                
                 if (searchData.error) throw new Error(searchData.error.message);
 
+                // 2. ดึงรายละเอียดเชิงลึก (Duration + Statistics สำหรับยอดวิว)
                 const videoIds = searchData.items.map(v => v.id.videoId).join(',');
-                const detailRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${API_KEY}&id=${videoIds}&part=contentDetails`);
+                const detailRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?key=${API_KEY}&id=${videoIds}&part=snippet,contentDetails,statistics`);
                 const detailData = await detailRes.json();
 
-                const grid = document.getElementById('video-grid');
-                grid.innerHTML = '';
+                loading.style.display = 'none';
+                vGrid.innerHTML = '';
 
-                searchData.items.forEach((item, index) => {
-                    const duration = detailData.items[index].contentDetails.duration;
-                    const title = item.snippet.title;
+                detailData.items.forEach((video) => {
+                    if (!isNotShort(video.contentDetails.duration)) return;
 
-                    if (isNotShort(duration) && !title.toLowerCase().includes('#shorts')) {
-                        grid.innerHTML += `
-                            <a href="https://www.youtube.com/watch?v=${item.id.videoId}" target="_blank" class="video-card group rounded-3xl overflow-hidden">
-                                <div class="relative aspect-video overflow-hidden bg-gray-100">
-                                    <img src="${item.snippet.thumbnails.high.url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                                    <div class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                                        <div class="play-icon w-14 h-14 bg-red-600 rounded-full flex items-center justify-center shadow-xl">
-                                            <svg class="w-6 h-6 fill-white ml-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                        </div>
-                                    </div>
+                    const title = video.snippet.title;
+                    const thumb = video.snippet.thumbnails.high.url;
+                    const views = parseInt(video.statistics.viewCount).toLocaleString(); // ทำตัวเลขให้มีคอมม่า
+                    const date = new Date(video.snippet.publishedAt).toLocaleDateString('th-TH');
+
+                    vGrid.innerHTML += `
+                        <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" class="organic-card group p-3 block">
+                            <div class="organic-img aspect-video relative overflow-hidden bg-gray-100">
+                                <img src="${thumb}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-lg font-bold flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                                    OFFICIAL
                                 </div>
-                                <div class="p-7">
-                                    <div class="flex items-center text-[10px] text-red-600 font-bold uppercase tracking-widest mb-3">
-                                        <span class="w-2 h-2 bg-red-600 rounded-full mr-2 animate-pulse"></span>
-                                        Official Video
-                                    </div>
-                                    <h3 class="font-bold text-xl text-gray-800 mb-4 line-clamp-2 leading-tight transition-colors group-hover:text-red-600">${title}</h3>
-                                    <div class="flex items-center justify-between border-t border-gray-50 pt-4">
-                                        <span class="text-xs text-gray-400 font-medium">
-                                            Published: ${new Date(item.snippet.publishedAt).toLocaleDateString('th-TH')}
-                                        </span>
-                                        <span class="text-xs text-gray-300">YouTube</span>
-                                    </div>
+                            </div>
+                            <div class="px-3 py-5">
+                                <h3 class="font-bold text-gray-800 text-lg leading-tight line-clamp-2 mb-4 group-hover:text-red-600 transition-colors">${title}</h3>
+                                <div class="flex justify-between items-center border-t border-gray-100 pt-4">
+                                    <span class="text-xs font-bold text-gray-500 flex items-center gap-1.5">
+                                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        ${views} วิว
+                                    </span>
+                                    <span class="text-[10px] font-medium text-gray-400">${date}</span>
                                 </div>
-                            </a>
-                        `;
-                    }
+                            </div>
+                        </a>
+                    `;
                 });
             } catch (err) {
-                document.getElementById('video-grid').innerHTML = `<p class="col-span-full text-center text-red-500">Error: ${err.message}</p>`;
+                loading.style.display = 'none';
+                errorBox.innerHTML = `<p class="text-red-600 text-sm">⚠️ Error: ${err.message}</p>`;
+                errorBox.classList.remove('hidden');
             }
         }
 
